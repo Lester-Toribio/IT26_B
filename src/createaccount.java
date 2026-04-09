@@ -186,6 +186,8 @@ try {
     int rowsInserted = pst.executeUpdate();
 
     if (rowsInserted > 0) {
+          TAO.setVisible(true);
+             dispose();
         JOptionPane.showMessageDialog(null, "Account Created Successfully!");
     } else {
         JOptionPane.showMessageDialog(null, "Failed to create account.");

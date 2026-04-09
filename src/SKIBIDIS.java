@@ -100,6 +100,12 @@ public class SKIBIDIS extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        FULLNAME.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FULLNAMEActionPerformed(evt);
+            }
+        });
+
         CONTACT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CONTACTActionPerformed(evt);
@@ -495,6 +501,10 @@ public class SKIBIDIS extends javax.swing.JFrame {
     private void CONTACTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CONTACTActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CONTACTActionPerformed
+
+    private void FULLNAMEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FULLNAMEActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_FULLNAMEActionPerformed
 
     /**
      * @param args the command line arguments
