@@ -483,11 +483,50 @@ public class SKIBIDIS extends javax.swing.JFrame {
     }//GEN-LAST:event_ADDLOANActionPerformed
 
     private void SHOWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SHOWActionPerformed
-        // TODO add your handling code here:
+    int selectedRow = TABLE.getSelectedRow();
+
+        if (selectedRow != -1) {
+            DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
+
+            String fullName = model.getValueAt(selectedRow, 0).toString();
+            String contact = model.getValueAt(selectedRow, 1).toString();
+            String address = model.getValueAt(selectedRow, 2).toString();
+            String amountOfLoan = model.getValueAt(selectedRow, 3).toString();
+            String years = model.getValueAt(selectedRow, 4).toString();
+            String months = model.getValueAt(selectedRow, 5).toString();
+            String interestRate = model.getValueAt(selectedRow, 6).toString();
+            String monthlyPayment = model.getValueAt(selectedRow, 7).toString();
+            String amountPaid = model.getValueAt(selectedRow, 8).toString();
+            String totalPayment = model.getValueAt(selectedRow, 9).toString();
+
+          
+            double totalPaymentValue = Double.parseDouble(totalPayment.replace("₱", "").replace(",", "").trim());
+            double amountPaidValue = Double.parseDouble(amountPaid.replace("₱", "").replace(",", "").trim());
+            double remainingBalance = totalPaymentValue - amountPaidValue;
+
+            String message = "Summary:\n\n"
+                    + "Full Name: " + fullName + "\n"
+                    + "Contact #: " + contact + "\n"
+                    + "Address: " + address + "\n"
+                    + "Amount of Loan: " + amountOfLoan + "\n"
+                    + "Loan Duration: "
+                    + (years.equals("N/A") ? "" : years + " Years ")
+                    + (months.equals("N/A") ? "" : months + " Month/s") + "\n"
+                    + "Interest Rate: " + interestRate + "%\n"
+                    + "Monthly Payment: " + monthlyPayment + "\n"
+                    + "Amount Paid: " + amountPaid + "\n"
+                    + "Total Payment: " + totalPayment + "\n"
+                    + String.format("Remaining Balance: ₱%.2f", remainingBalance);
+
+            JOptionPane.showMessageDialog(this, message, "Loan Summary", JOptionPane.PLAIN_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a row to show the loan summary.", "No Selection", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_SHOWActionPerformed
 
     private void DELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DELETEActionPerformed
-        // TODO add your handling code here:
+
+      
     }//GEN-LAST:event_DELETEActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
