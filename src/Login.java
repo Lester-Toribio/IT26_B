@@ -160,7 +160,8 @@ try {
 
     ResultSet rs = pst.executeQuery();
           if (rs.next()) {
-             
+             TAO.setVisible(true);
+             dispose();
 } else {
     JOptionPane.showMessageDialog(null, "Incorrect Credentials");
 }
