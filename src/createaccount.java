@@ -1,4 +1,7 @@
 
+import javax.swing.JOptionPane;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
 
 
 
@@ -165,7 +168,32 @@ public static String Myusername;
     }//GEN-LAST:event_usernameActionPerformed
 
     private void createaccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createaccountActionPerformed
-        // TODO add your handling code here:
+ SKIBIDIS TAO = new SKIBIDIS();
+        
+        
+        Connection conn = LOANSHARK.getConnection();
+
+try {
+    String sql = "INSERT INTO accounts (username, password) VALUES (?, ?)";
+    PreparedStatement pst = conn.prepareStatement(sql);
+
+    String user = username.getText();
+    String pass = new String(password.getPassword());
+
+    pst.setString(1, user);
+    pst.setString(2, pass);
+
+    int rowsInserted = pst.executeUpdate();
+
+    if (rowsInserted > 0) {
+        JOptionPane.showMessageDialog(null, "Account Created Successfully!");
+    } else {
+        JOptionPane.showMessageDialog(null, "Failed to create account.");
+    }
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+}   // TODO add your handling code here:
     }//GEN-LAST:event_createaccountActionPerformed
 
 
