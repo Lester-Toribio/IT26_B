@@ -492,6 +492,28 @@ public class SKIBIDIS extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
+        int result = JOptionPane.showConfirmDialog(this, // Reference to the current SKIBIDIS JFrame
+                "Are you sure you want to log out?",
+                "Confirm Logout",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (result == JOptionPane.YES_OPTION) {
+            dispose();
+            new Login().setVisible(true);
+        }
+
+
+    }                                        
+    public static double Pmt(double r, double n, double p) {
+
+        if (r == 0) {
+
+            return -p / n;
+        } else {
+
+            return r * p / (1 - Math.pow(1 + r, -n));
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PAYActionPerformed
