@@ -142,7 +142,31 @@ public static String Myusername;
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-          
+          SKIBIDIS TAO = new SKIBIDIS();
+   
+
+
+Connection conn = LOANSHARK.getConnection();
+
+try {
+    String sql = "SELECT * FROM accounts WHERE username=? AND password=?";
+    PreparedStatement pst = conn.prepareStatement(sql);
+
+    String user = username.getText();
+    String pass = new String(password.getPassword());
+
+    pst.setString(1, user);
+    pst.setString(2, pass);
+
+    ResultSet rs = pst.executeQuery();
+          if (rs.next()) {
+} else {
+    JOptionPane.showMessageDialog(null, "Incorrect Credentials");
+}
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
+}
+
 
 
     
