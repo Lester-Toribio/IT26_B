@@ -15,6 +15,51 @@ import java.sql.ResultSet;
  * @author Eunace Faith Emactao
  */
 public class SKIBIDIS extends javax.swing.JFrame {
+    private void loadLoans() {
+    try {
+        Connection conn = LOANSHARK.getConnection();
+
+        String sql = "SELECT * FROM list WHERE userId = ?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setInt(1, Session.userId);
+
+        ResultSet rs = pst.executeQuery();
+
+        DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
+        model.setRowCount(0);
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("ID"),
+                rs.getString("FullName"),
+                rs.getString("address"),
+                rs.getString("contactNumber"),
+                rs.getDouble("amountOfLoan"),
+                rs.getString("years"),
+                rs.getString("months"),
+                rs.getDouble("interestRate"),
+                rs.getDouble("monthlyPayment"),
+                rs.getDouble("amountPaid"),
+                rs.getDouble("totalPayment")
+            });
+        }
+
+        conn.close();
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
+}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 Connection conn = LOANSHARK.getConnection();
     /**
      * Creates new form SKIBIDIS
@@ -471,23 +516,21 @@ Connection conn = LOANSHARK.getConnection();
             return;
         }
 
-        String sql = "INSERT INTO list "
-                + "(FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO list (userId, FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
- PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
+PreparedStatement pst = conn.prepareStatement(sql);
 
-        pst.setString(1, fullName);
-        pst.setString(2, address);
-        pst.setString(3, contact);
-        pst.setDouble(4, Double.parseDouble(amountOfLoan));
-        pst.setString(5, years.isEmpty() ? null : years);
-        pst.setString(6, months.isEmpty() ? null : months);
-        pst.setDouble(7, Double.parseDouble(interestRate));
-        pst.setDouble(8, Double.parseDouble(monthlyPayment));
-        pst.setDouble(9, 0.0);
-        pst.setDouble(10, Double.parseDouble(totalPayment));
-
+pst.setInt(1, Session.userId); // userId FIRST
+pst.setString(2, fullName);
+pst.setString(3, address);
+pst.setString(4, contact);
+pst.setDouble(5, Double.parseDouble(amountOfLoan));
+pst.setString(6, years.isEmpty() ? null : years);
+pst.setString(7, months.isEmpty() ? null : months);
+pst.setDouble(8, Double.parseDouble(interestRate));
+pst.setDouble(9, Double.parseDouble(monthlyPayment));
+pst.setDouble(10, 0.0);
+pst.setDouble(11, Double.parseDouble(totalPayment));
         pst.executeUpdate();
 
         ResultSet rs = pst.getGeneratedKeys();
