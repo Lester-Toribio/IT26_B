@@ -142,9 +142,7 @@ public static String Myusername;
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-          SKIBIDIS TAO = new SKIBIDIS();
-   
-
+                                         
 
 Connection conn = LOANSHARK.getConnection();
 
@@ -159,15 +157,26 @@ try {
     pst.setString(2, pass);
 
     ResultSet rs = pst.executeQuery();
-          if (rs.next()) {
-             TAO.setVisible(true);
-             dispose();
-} else {
-    JOptionPane.showMessageDialog(null, "Incorrect Credentials");
-}
+
+    if (rs.next()) {
+
+    
+        Session.userId = rs.getInt("id");   
+        Session.username = rs.getString("username");
+
+    
+        SKIBIDIS TAO = new SKIBIDIS();
+        TAO.setVisible(true);
+        this.dispose();
+
+    } else {
+        JOptionPane.showMessageDialog(null, "Incorrect Credentials");
+    }
+
 } catch (Exception e) {
     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
 }
+
 
 
 
