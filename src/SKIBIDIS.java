@@ -568,7 +568,47 @@ Connection conn = LOANSHARK.getConnection();
     }//GEN-LAST:event_SHOWActionPerformed
 
     private void DELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DELETEActionPerformed
-                                     
+             int row = TABLE.getSelectedRow();
+
+if (row == -1) {
+    JOptionPane.showMessageDialog(this, "Select a row first!");
+    return;
+}
+
+
+int confirm = JOptionPane.showConfirmDialog(
+        this,
+        "Are you sure you want to delete this record?",
+        "Confirm Delete",
+        JOptionPane.YES_NO_OPTION
+);
+
+if (confirm != JOptionPane.YES_OPTION) {
+    return; 
+}
+
+try {
+    Connection conn = LOANSHARK.getConnection();
+    DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
+
+    int id = Integer.parseInt(model.getValueAt(row, 0).toString());
+
+    String sql = "DELETE FROM list WHERE ID = ?";
+    PreparedStatement pst = conn.prepareStatement(sql);
+    pst.setInt(1, id);
+
+    pst.executeUpdate();
+
+    model.removeRow(row);
+
+    JOptionPane.showMessageDialog(this, "Deleted!");
+
+    conn.close();
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+}
+                              
                                     
 
     }//GEN-LAST:event_DELETEActionPerformed
