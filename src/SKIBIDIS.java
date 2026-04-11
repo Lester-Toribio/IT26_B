@@ -641,7 +641,65 @@ try {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PAYActionPerformed
-                                    
+              int row = TABLE.getSelectedRow();
+
+    if (row == -1) {
+        JOptionPane.showMessageDialog(this, "Select a loan first!");
+        return;
+    }
+
+    try {
+        DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
+
+        int id = Integer.parseInt(model.getValueAt(row, 0).toString());
+        double currentPaid = Double.parseDouble(model.getValueAt(row, 9).toString());
+        double totalPayment = Double.parseDouble(model.getValueAt(row, 10).toString());
+
+        String input = JOptionPane.showInputDialog(this, "Enter payment amount:");
+
+        if (input == null || input.trim().isEmpty()) {
+            return; 
+        }
+
+        double payAmount = Double.parseDouble(input);
+
+        if (payAmount <= 0) {
+            JOptionPane.showMessageDialog(this, "Invalid payment amount!");
+            return;
+        }
+
+        double newPaid = currentPaid + payAmount;
+
+        if (newPaid > totalPayment) {
+            JOptionPane.showMessageDialog(this, "Payment exceeds total loan!");
+            return;
+        }
+
+        double remaining = totalPayment - newPaid;
+
+   
+        Connection conn = LOANSHARK.getConnection();
+
+        String sql = "UPDATE list SET amountPaid = ? WHERE ID = ?";
+        PreparedStatement pst = conn.prepareStatement(sql);
+        pst.setDouble(1, newPaid);
+        pst.setInt(2, id);
+        pst.executeUpdate();
+
+        conn.close();
+
+      
+        model.setValueAt(String.format("%.2f", newPaid), row, 9);
+        
+
+        JOptionPane.showMessageDialog(this, "Payment updated successfully!");
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Enter a valid number!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
+                      
    
     }//GEN-LAST:event_PAYActionPerformed
 
