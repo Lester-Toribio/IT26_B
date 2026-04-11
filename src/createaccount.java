@@ -2,7 +2,7 @@
 import javax.swing.JOptionPane;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
-
+import java.sql.ResultSet;
 
 
 
@@ -168,17 +168,19 @@ public static String Myusername;
     }//GEN-LAST:event_usernameActionPerformed
 
     private void createaccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createaccountActionPerformed
- SKIBIDIS TAO = new SKIBIDIS();
-        
-        
-        Connection conn = LOANSHARK.getConnection();
+ Connection conn = LOANSHARK.getConnection();
 
 try {
     String sql = "INSERT INTO accounts (username, password) VALUES (?, ?)";
     PreparedStatement pst = conn.prepareStatement(sql);
 
-    String user = username.getText();
-    String pass = new String(password.getPassword());
+    String user = username.getText().trim();
+    String pass = new String(password.getPassword()).trim();
+
+    if (user.isEmpty() || pass.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Please fill all fields!");
+        return;
+    }
 
     pst.setString(1, user);
     pst.setString(2, pass);
@@ -186,16 +188,38 @@ try {
     int rowsInserted = pst.executeUpdate();
 
     if (rowsInserted > 0) {
-          TAO.setVisible(true);
-             dispose();
+
+      
+        String getUserSql = "SELECT id FROM accounts WHERE username=? AND password=?";
+        PreparedStatement pst2 = conn.prepareStatement(getUserSql);
+        pst2.setString(1, user);
+        pst2.setString(2, pass);
+
+        ResultSet rs = pst2.executeQuery();
+
+        int newUserId = -1;
+
+        if (rs.next()) {
+            newUserId = rs.getInt("id");
+        }
+
+      
+        Session.userId = newUserId;
+        Session.username = user;
+
         JOptionPane.showMessageDialog(null, "Account Created Successfully!");
+
+        SKIBIDIS TAO = new SKIBIDIS();
+        TAO.setVisible(true);
+        dispose();
+
     } else {
         JOptionPane.showMessageDialog(null, "Failed to create account.");
     }
 
 } catch (Exception e) {
     JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
-}   // TODO add your handling code here:
+}
     }//GEN-LAST:event_createaccountActionPerformed
 
 
