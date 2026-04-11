@@ -3,6 +3,7 @@ import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -163,14 +164,14 @@ Connection conn = LOANSHARK.getConnection();
 
             },
             new String [] {
-                "FULL NAME", "ADDRESS", "Contact #", "AMOUNT OF LOAN", "YEARS", "MONTHS", "INTEREST RATE", "MONTHLY PAYMENT", "AMOUNT PAID", "TOTAL PAYMENT"
+                "ID", "FULL NAME", "ADDRESS", "Contact #", "AMOUNT OF LOAN", "YEARS", "MONTHS", "INTEREST RATE", "MONTHLY PAYMENT", "AMOUNT PAID", "TOTAL PAYMENT"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -301,7 +302,7 @@ Connection conn = LOANSHARK.getConnection();
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -340,7 +341,7 @@ Connection conn = LOANSHARK.getConnection();
                             .addComponent(TOTALPAYMENT, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel9)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CALCULATE, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ADDLOAN, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -448,141 +449,128 @@ Connection conn = LOANSHARK.getConnection();
     }//GEN-LAST:event_CALCULATEActionPerformed
 
     private void ADDLOANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDLOANActionPerformed
-    Connection conn = LOANSHARK.getConnection();
-        
+                                        
+    try {
+        Connection conn = LOANSHARK.getConnection();
+
         String fullName = FULLNAME.getText().trim();
-String contact = CONTACT.getText().trim();
-String address = ADDRESS.getText().trim();
-String amountOfLoan = AMOUNTOFLOAN.getText().trim();
-String years = YEARS.getText().trim();
-String months = MONTHS.getText().trim();
-String interestRate = INTERESTRATE.getText().trim();
-String monthlyPayment = MONTHLYPAYMENT.getText().trim();
-String totalPayment = TOTALPAYMENT.getText().trim();
+        String contact = CONTACT.getText().trim();
+        String address = ADDRESS.getText().trim();
+        String amountOfLoan = AMOUNTOFLOAN.getText().trim();
+        String years = YEARS.getText().trim();
+        String months = MONTHS.getText().trim();
+        String interestRate = INTERESTRATE.getText().trim();
+        String monthlyPayment = MONTHLYPAYMENT.getText().trim();
+        String totalPayment = TOTALPAYMENT.getText().trim();
 
+        if (fullName.isEmpty() || contact.isEmpty() || address.isEmpty()
+                || amountOfLoan.isEmpty() || interestRate.isEmpty()
+                || monthlyPayment.isEmpty() || totalPayment.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Fill all required fields!");
+            return;
+        }
 
-if (fullName.isEmpty() || contact.isEmpty() || address.isEmpty() || amountOfLoan.isEmpty()
-        || interestRate.isEmpty() || monthlyPayment.isEmpty() || totalPayment.isEmpty()) {
+        String sql = "INSERT INTO list "
+                + "(FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    JOptionPane.showMessageDialog(null,
-            "Please fill in all required fields.",
-            "Input Error",
-            JOptionPane.ERROR_MESSAGE);
-    return;
-}
+        PreparedStatement pst = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
-if (years.isEmpty() && months.isEmpty()) {
-    JOptionPane.showMessageDialog(null,
-            "Please enter either Years or Months.",
-            "Input Error",
-            JOptionPane.ERROR_MESSAGE);
-    return;
-}
+        pst.setString(1, fullName);
+        pst.setString(2, address);
+        pst.setString(3, contact);
+        pst.setDouble(4, Double.parseDouble(amountOfLoan));
+        pst.setString(5, years.isEmpty() ? null : years);
+        pst.setString(6, months.isEmpty() ? null : months);
+        pst.setDouble(7, Double.parseDouble(interestRate));
+        pst.setDouble(8, Double.parseDouble(monthlyPayment));
+        pst.setDouble(9, 0.0);
+        pst.setDouble(10, Double.parseDouble(totalPayment));
 
+        pst.executeUpdate();
 
-amountOfLoan = amountOfLoan.replace(",", "");
-interestRate = interestRate.replace("%", "");
-monthlyPayment = monthlyPayment.replace(",", "");
-totalPayment = totalPayment.replace(",", "");
+        ResultSet rs = pst.getGeneratedKeys();
+        int id = 0;
+        if (rs.next()) {
+            id = rs.getInt(1);
+        }
 
-// ADD sa TABLE
-DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
-model.addRow(new Object[]{
-    fullName,
-    contact,
-    address,
-    "₱" + amountOfLoan,
-    years.isEmpty() ? "N/A" : years,
-    months.isEmpty() ? "N/A" : months,
-    interestRate + "%",
-    "₱" + monthlyPayment,
-    "₱0.00",
-    "₱" + totalPayment
-});
+        DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
 
-try {
-   
+        model.addRow(new Object[]{
+            id,
+            fullName,
+            address,
+            contact,
+            amountOfLoan,
+            years.isEmpty() ? "N/A" : years,
+            months.isEmpty() ? "N/A" : months,
+            interestRate,
+            monthlyPayment,
+            "0.00",
+            totalPayment
+        });
 
-    String sql = "INSERT INTO list "
-            + "(FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        JOptionPane.showMessageDialog(this, "Saved Successfully!");
 
-    PreparedStatement pst = conn.prepareStatement(sql);
+        conn.close();
 
-    pst.setString(1, fullName);
-    pst.setString(2, address);
-    pst.setString(3, contact);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
 
-  pst.setDouble(4, Double.parseDouble(amountOfLoan.replace("₱", "").replace(",", "").trim()));
-    pst.setString(5, years.isEmpty() ? null : years);
-    pst.setString(6, months.isEmpty() ? null : months);
-
-  pst.setDouble(7, Double.parseDouble(interestRate.replace("%", "").replace(",", "").trim()));
-
- pst.setDouble(8, Double.parseDouble(monthlyPayment.replace("₱", "").replace(",", "").trim()));
-
- 
-    pst.setDouble(9, 0.0); 
-
-   pst.setDouble(10, Double.parseDouble(totalPayment.replace("₱", "").replace(",", "").trim()));
-
-    pst.executeUpdate();
-
-    JOptionPane.showMessageDialog(null, "Data successfully saved!");
-
-    conn.close();
-
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage());
-}
     }//GEN-LAST:event_ADDLOANActionPerformed
 
 
     private void SHOWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SHOWActionPerformed
-    int selectedRow = TABLE.getSelectedRow();
+                                     
 
-        if (selectedRow != -1) {
-            DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
+    int row = TABLE.getSelectedRow();
 
-            String fullName = model.getValueAt(selectedRow, 0).toString();
-            String contact = model.getValueAt(selectedRow, 1).toString();
-            String address = model.getValueAt(selectedRow, 2).toString();
-            String amountOfLoan = model.getValueAt(selectedRow, 3).toString();
-            String years = model.getValueAt(selectedRow, 4).toString();
-            String months = model.getValueAt(selectedRow, 5).toString();
-            String interestRate = model.getValueAt(selectedRow, 6).toString();
-            String monthlyPayment = model.getValueAt(selectedRow, 7).toString();
-            String amountPaid = model.getValueAt(selectedRow, 8).toString();
-            String totalPayment = model.getValueAt(selectedRow, 9).toString();
+    if (row == -1) {
+        JOptionPane.showMessageDialog(this, "Select a row!");
+        return;
+    }
 
-          
-            double totalPaymentValue = Double.parseDouble(totalPayment.replace("₱", "").replace(",", "").trim());
-            double amountPaidValue = Double.parseDouble(amountPaid.replace("₱", "").replace(",", "").trim());
-            double remainingBalance = totalPaymentValue - amountPaidValue;
+    DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
 
-            String message = "Summary:\n\n"
-                    + "Full Name: " + fullName + "\n"
-                    + "Contact #: " + contact + "\n"
-                    + "Address: " + address + "\n"
-                    + "Amount of Loan: " + amountOfLoan + "\n"
-                    + "Loan Duration: "
-                    + (years.equals("N/A") ? "" : years + " Years ")
-                    + (months.equals("N/A") ? "" : months + " Month/s") + "\n"
-                    + "Interest Rate: " + interestRate + "%\n"
-                    + "Monthly Payment: " + monthlyPayment + "\n"
-                    + "Amount Paid: " + amountPaid + "\n"
-                    + "Total Payment: " + totalPayment + "\n"
-                    + String.format("Remaining Balance: ₱%.2f", remainingBalance);
+    String fullName = model.getValueAt(row, 1).toString();
+    String contact = model.getValueAt(row, 2).toString();
+    String address = model.getValueAt(row, 3).toString();
+    String amount = model.getValueAt(row, 4).toString();
+    String years = model.getValueAt(row, 5).toString();
+    String months = model.getValueAt(row, 6).toString();
+    String rate = model.getValueAt(row, 7).toString();
+    String monthly = model.getValueAt(row, 8).toString();
+    String paid = model.getValueAt(row, 9).toString();
+    String total = model.getValueAt(row, 10).toString();
 
-            JOptionPane.showMessageDialog(this, message, "Loan Summary", JOptionPane.PLAIN_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a row to show the loan summary.", "No Selection", JOptionPane.WARNING_MESSAGE);
-        }
+    double paidVal = Double.parseDouble(paid);
+    double totalVal = Double.parseDouble(total);
+    double remaining = totalVal - paidVal;
+
+   JOptionPane.showMessageDialog(this,
+        "ID: " + model.getValueAt(row, 0) +
+        "\nName: " + fullName +
+        "\nAddress: " + address +
+        "\nContact: " + contact +
+        "\nLoan Amount: " + amount +
+        "\nYears: " + years +
+        "\nMonths: " + months +
+        "\nInterest Rate: " + rate +
+        "\nMonthly Payment: " + monthly +
+        "\nAmount Paid: " + paid +
+        "\nTotal Payment: " + total +
+        "\nRemaining: ₱" + remaining
+
+    );
+
     }//GEN-LAST:event_SHOWActionPerformed
 
     private void DELETEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DELETEActionPerformed
+                                     
+                                    
 
-      
     }//GEN-LAST:event_DELETEActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
