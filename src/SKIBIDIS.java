@@ -570,45 +570,37 @@ pst.setDouble(11, Double.parseDouble(totalPayment));
     private void SHOWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SHOWActionPerformed
                                      
 
+                                   
+
     int row = TABLE.getSelectedRow();
 
     if (row == -1) {
-        JOptionPane.showMessageDialog(this, "Select a row!");
+        JOptionPane.showMessageDialog(this, "Please select a loan from the table first!");
         return;
     }
 
     DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
-
-    String fullName = model.getValueAt(row, 1).toString();
-    String address = model.getValueAt(row, 2).toString();
-    String contact = model.getValueAt(row, 3).toString();
-    String amount = model.getValueAt(row, 4).toString();
-    String years = model.getValueAt(row, 5).toString();
-    String months = model.getValueAt(row, 6).toString();
-    String rate = model.getValueAt(row, 7).toString();
-    String monthly = model.getValueAt(row, 8).toString();
-    String paid = model.getValueAt(row, 9).toString();
-    String total = model.getValueAt(row, 10).toString();
-
-    double paidVal = Double.parseDouble(paid);
-    double totalVal = Double.parseDouble(total);
+    double paidVal = Double.parseDouble(model.getValueAt(row, 9).toString());
+    double totalVal = Double.parseDouble(model.getValueAt(row, 10).toString());
     double remaining = totalVal - paidVal;
 
-   JOptionPane.showMessageDialog(this,
-        "ID: " + model.getValueAt(row, 0) +
-        "\nName: " + fullName +
-        "\nAddress: " + address +
-        "\nContact: " + contact +
-        "\nLoan Amount: " + amount +
-        "\nYears: " + years +
-        "\nMonths: " + months +
-        "\nInterest Rate: " + rate +
-        "\nMonthly Payment: " + monthly +
-        "\nAmount Paid: " + paid +
-        "\nTotal Payment: " + total +
-        "\nRemaining: ₱" + remaining
+    String details =
+        "=== LOAN DETAILS ===\n\n" +
+        "ID: " + model.getValueAt(row, 0) + "\n" +
+        "Full Name: " + model.getValueAt(row, 1) + "\n" +
+        "Address: " + model.getValueAt(row, 2) + "\n" +
+        "Contact #: " + model.getValueAt(row, 3) + "\n" +
+        "Loan Amount: " + model.getValueAt(row, 4) + "\n" +
+        "Years: " + model.getValueAt(row, 5) + "\n" +
+        "Months: " + model.getValueAt(row, 6) + "\n" +
+        "Interest Rate: " + model.getValueAt(row, 7) + "\n" +
+        "Monthly Payment: " + model.getValueAt(row, 8) + "\n" +
+        "Amount Paid: " + model.getValueAt(row, 9) + "\n" +
+        "Total Payment: " + model.getValueAt(row, 10) + "\n"+
+         "Remaining Balance: " + String.format("%.2f", remaining);
+    
+    JOptionPane.showMessageDialog(this, details,"Loan Information", JOptionPane.INFORMATION_MESSAGE);
 
-    );
 
     }//GEN-LAST:event_SHOWActionPerformed
 
