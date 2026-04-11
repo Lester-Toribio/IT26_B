@@ -1,6 +1,8 @@
 
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.sql.PreparedStatement;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Eunace Faith Emactao
  */
 public class SKIBIDIS extends javax.swing.JFrame {
-
+Connection conn = LOANSHARK.getConnection();
     /**
      * Creates new form SKIBIDIS
      */
@@ -432,8 +434,8 @@ public class SKIBIDIS extends javax.swing.JFrame {
             double totalPayment = loanAmount + interest;
             double monthlyPayment = totalPayment / numberOfPayments;
 
-            MONTHLYPAYMENT.setText("₱" + String.format("%.2f", monthlyPayment));
-            TOTALPAYMENT.setText("₱" + String.format("%.2f", totalPayment));
+            MONTHLYPAYMENT.setText("" + String.format("%.2f", monthlyPayment));
+            TOTALPAYMENT.setText("" + String.format("%.2f", totalPayment));
 
             System.out.println("Customer Full Name: " + fullName);
             System.out.println("Customer Address: " + address);
@@ -446,41 +448,95 @@ public class SKIBIDIS extends javax.swing.JFrame {
     }//GEN-LAST:event_CALCULATEActionPerformed
 
     private void ADDLOANActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADDLOANActionPerformed
+    Connection conn = LOANSHARK.getConnection();
+        
         String fullName = FULLNAME.getText().trim();
-        String contact = CONTACT.getText().trim();
-        String address = ADDRESS.getText().trim();
-        String amountOfLoan = AMOUNTOFLOAN.getText().trim();
-        String years = YEARS.getText().trim();
-        String months = MONTHS.getText().trim();
-        String interestRate = INTERESTRATE.getText().trim();
-        String monthlyPayment = MONTHLYPAYMENT.getText().trim();
-        String totalPayment = TOTALPAYMENT.getText().trim();
+String contact = CONTACT.getText().trim();
+String address = ADDRESS.getText().trim();
+String amountOfLoan = AMOUNTOFLOAN.getText().trim();
+String years = YEARS.getText().trim();
+String months = MONTHS.getText().trim();
+String interestRate = INTERESTRATE.getText().trim();
+String monthlyPayment = MONTHLYPAYMENT.getText().trim();
+String totalPayment = TOTALPAYMENT.getText().trim();
 
-        if (fullName.isEmpty() || contact.isEmpty() || address.isEmpty() || amountOfLoan.isEmpty()
-            || interestRate.isEmpty() || monthlyPayment.isEmpty() || totalPayment.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill in all required fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
-        if (years.isEmpty() && months.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter either Years or Months.", "Input Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+if (fullName.isEmpty() || contact.isEmpty() || address.isEmpty() || amountOfLoan.isEmpty()
+        || interestRate.isEmpty() || monthlyPayment.isEmpty() || totalPayment.isEmpty()) {
 
-        DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
-        model.addRow(new Object[]{
-            fullName,
-            contact,
-            address,
-            "₱"+amountOfLoan,
-            years.isEmpty() ? "N/A" : years,
-            months.isEmpty() ? "N/A" : months,
-            interestRate + "%",
-            monthlyPayment,
-            "₱0.00",
-            totalPayment
-        });
+    JOptionPane.showMessageDialog(null,
+            "Please fill in all required fields.",
+            "Input Error",
+            JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+if (years.isEmpty() && months.isEmpty()) {
+    JOptionPane.showMessageDialog(null,
+            "Please enter either Years or Months.",
+            "Input Error",
+            JOptionPane.ERROR_MESSAGE);
+    return;
+}
+
+
+amountOfLoan = amountOfLoan.replace(",", "");
+interestRate = interestRate.replace("%", "");
+monthlyPayment = monthlyPayment.replace(",", "");
+totalPayment = totalPayment.replace(",", "");
+
+// ADD sa TABLE
+DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
+model.addRow(new Object[]{
+    fullName,
+    contact,
+    address,
+    "₱" + amountOfLoan,
+    years.isEmpty() ? "N/A" : years,
+    months.isEmpty() ? "N/A" : months,
+    interestRate + "%",
+    "₱" + monthlyPayment,
+    "₱0.00",
+    "₱" + totalPayment
+});
+
+try {
+   
+
+    String sql = "INSERT INTO list "
+            + "(FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    PreparedStatement pst = conn.prepareStatement(sql);
+
+    pst.setString(1, fullName);
+    pst.setString(2, address);
+    pst.setString(3, contact);
+
+  pst.setDouble(4, Double.parseDouble(amountOfLoan.replace("₱", "").replace(",", "").trim()));
+    pst.setString(5, years.isEmpty() ? null : years);
+    pst.setString(6, months.isEmpty() ? null : months);
+
+  pst.setDouble(7, Double.parseDouble(interestRate.replace("%", "").replace(",", "").trim()));
+
+ pst.setDouble(8, Double.parseDouble(monthlyPayment.replace("₱", "").replace(",", "").trim()));
+
+ 
+    pst.setDouble(9, 0.0); 
+
+   pst.setDouble(10, Double.parseDouble(totalPayment.replace("₱", "").replace(",", "").trim()));
+
+    pst.executeUpdate();
+
+    JOptionPane.showMessageDialog(null, "Data successfully saved!");
+
+    conn.close();
+
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Database Error: " + e.getMessage());
+}
     }//GEN-LAST:event_ADDLOANActionPerformed
+
 
     private void SHOWActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SHOWActionPerformed
     int selectedRow = TABLE.getSelectedRow();
