@@ -66,6 +66,7 @@ Connection conn = LOANSHARK.getConnection();
      */
     public SKIBIDIS() {
         initComponents();
+        loadLoans();
     }
 
     /**
@@ -518,7 +519,7 @@ Connection conn = LOANSHARK.getConnection();
 
         String sql = "INSERT INTO list (userId, FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-PreparedStatement pst = conn.prepareStatement(sql);
+PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 
 pst.setInt(1, Session.userId); // userId FIRST
 pst.setString(2, fullName);

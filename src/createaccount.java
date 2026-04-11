@@ -168,7 +168,7 @@ public static String Myusername;
     }//GEN-LAST:event_usernameActionPerformed
 
     private void createaccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createaccountActionPerformed
- Connection conn = LOANSHARK.getConnection();
+     Connection conn = LOANSHARK.getConnection();
 
 try {
     String sql = "INSERT INTO accounts (username, password) VALUES (?, ?)";
