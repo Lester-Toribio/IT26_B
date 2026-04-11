@@ -294,7 +294,7 @@ Connection conn = LOANSHARK.getConnection();
                         .addComponent(DELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(50, 50, 50)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
+                        .addGap(18, 18, 18)
                         .addComponent(PAY, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
@@ -347,8 +347,9 @@ Connection conn = LOANSHARK.getConnection();
                     .addComponent(ADDLOAN, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SHOW, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(DELETE, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PAY, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(PAY, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 793, Short.MAX_VALUE))
         );
 
@@ -474,7 +475,7 @@ Connection conn = LOANSHARK.getConnection();
                 + "(FullName, address, contactNumber, amountOfLoan, years, months, interestRate, monthlyPayment, amountPaid, totalPayment) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement pst = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+ PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 
         pst.setString(1, fullName);
         pst.setString(2, address);
@@ -535,8 +536,8 @@ Connection conn = LOANSHARK.getConnection();
     DefaultTableModel model = (DefaultTableModel) TABLE.getModel();
 
     String fullName = model.getValueAt(row, 1).toString();
-    String contact = model.getValueAt(row, 2).toString();
-    String address = model.getValueAt(row, 3).toString();
+    String address = model.getValueAt(row, 2).toString();
+    String contact = model.getValueAt(row, 3).toString();
     String amount = model.getValueAt(row, 4).toString();
     String years = model.getValueAt(row, 5).toString();
     String months = model.getValueAt(row, 6).toString();
@@ -640,7 +641,8 @@ try {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void PAYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PAYActionPerformed
-        // TODO add your handling code here:
+                                    
+   
     }//GEN-LAST:event_PAYActionPerformed
 
     private void CONTACTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CONTACTActionPerformed
