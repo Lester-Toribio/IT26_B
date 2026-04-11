@@ -558,7 +558,15 @@ pst.setDouble(11, Double.parseDouble(totalPayment));
 
         JOptionPane.showMessageDialog(this, "Saved Successfully!");
 
-        conn.close();
+        FULLNAME.setText("");
+    ADDRESS.setText("");
+    CONTACT.setText("");
+    AMOUNTOFLOAN.setText("");
+    YEARS.setText("");
+    MONTHS.setText("");
+    INTERESTRATE.setText("");
+    MONTHLYPAYMENT.setText("");
+    TOTALPAYMENT.setText("");
 
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
