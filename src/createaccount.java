@@ -182,6 +182,16 @@ try {
         return;
     }
 
+    String checkSql = "SELECT * FROM accounts WHERE username = ?";
+    PreparedStatement checkPst = conn.prepareStatement(checkSql);
+    checkPst.setString(1, user);
+
+    ResultSet checkRs = checkPst.executeQuery();
+
+    if (checkRs.next()) {
+        JOptionPane.showMessageDialog(null, "Username already exists!");
+        return;
+    }
     pst.setString(1, user);
     pst.setString(2, pass);
 

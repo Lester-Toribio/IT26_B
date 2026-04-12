@@ -521,7 +521,7 @@ Connection conn = LOANSHARK.getConnection();
 
 PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 
-pst.setInt(1, Session.userId); // userId FIRST
+pst.setInt(1, Session.userId); 
 pst.setString(2, fullName);
 pst.setString(3, address);
 pst.setString(4, contact);
@@ -551,7 +551,7 @@ pst.setDouble(11, Double.parseDouble(totalPayment));
             years.isEmpty() ? "N/A" : years,
             months.isEmpty() ? "N/A" : months,
             interestRate,
-            monthlyPayment,
+            monthlyPayment, 
             "0.00",
             totalPayment
         });
@@ -660,7 +660,7 @@ try {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        int result = JOptionPane.showConfirmDialog(this, // Reference to the current SKIBIDIS JFrame
+        int result = JOptionPane.showConfirmDialog(this, 
                 "Are you sure you want to log out?",
                 "Confirm Logout",
                 JOptionPane.YES_NO_OPTION
