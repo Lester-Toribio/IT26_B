@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 
 public class createaccount extends javax.swing.JFrame {
-public static String Myusername;
+
     public createaccount() {
          
         initComponents();

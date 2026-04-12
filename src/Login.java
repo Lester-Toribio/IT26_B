@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 
 public class Login extends javax.swing.JFrame {
-public static String Myusername;
+
     public Login() {
         initComponents();
     }
